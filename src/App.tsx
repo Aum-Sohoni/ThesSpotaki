@@ -13,7 +13,7 @@ export default function App() {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY;
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [themeOverridden, setThemeOverridden] = useState(false);
-  const [showAboutModal, setShowAboutModal] = useState(true);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   useEffect(() => {
     // Initialize theme from system preference
