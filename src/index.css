@@ -30,8 +30,18 @@
 }
 
 @layer base {
+  html, body, #root {
+    height: 100%;
+  }
+
   body {
     @apply antialiased text-slate-900 bg-slate-50 leading-relaxed;
+  }
+}
+
+@media (max-width: 767px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
   }
 }
 

@@ -12,7 +12,6 @@ const DEFAULT_GOOGLE_MAPS_API_KEY = 'AIzaSyDZpn9e3Xww8FMMW7U49bMNEbg_TiuEmOw';
 export default function App() {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY;
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [themeOverridden, setThemeOverridden] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export default function App() {
 
   const handleSetDarkMode = (isDark: boolean) => {
     setIsDarkMode(isDark);
-    setThemeOverridden(true);
   };
 
   useEffect(() => {
@@ -61,7 +59,7 @@ export default function App() {
   }, [apiKey]);
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-slate-950 transition-colors duration-500">
+    <div className="flex flex-col h-dvh bg-white dark:bg-slate-950 transition-colors duration-500">
       <AboutModal 
         isOpen={showAboutModal} 
         onClose={() => setShowAboutModal(false)} 

@@ -151,18 +151,26 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
   // Map viewport bounds
   const [mapZoom, setMapZoom] = useState(15);
   const [mapCenter, setMapCenter] = useState(THESSALONIKI_CENTER);
+  const [isMobile, setIsMobile] = useState(false);
 
   const landmarkRef = useRef<HTMLDivElement>(null);
 
   // Close landmark dropdown on click outside
   useEffect(() => {
+    const updateViewport = () => setIsMobile(window.innerWidth < 768);
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+
     function handleClickOutside(event: MouseEvent) {
       if (landmarkRef.current && !landmarkRef.current.contains(event.target as Node)) {
         setIsLandmarkDropdownOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener('resize', updateViewport);
+    };
   }, []);
 
   // Find currently active Destination Street Options
@@ -563,14 +571,14 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
       <div 
         id="thesspotaki-sidebar" 
         onWheelCapture={(e) => e.stopPropagation()}
-        className={`w-full md:w-[380px] shrink-0 border-b md:border-b-0 md:border-r flex flex-col h-auto md:h-full z-10 relative transition-all duration-300 ${
+        className={`w-full md:w-[360px] xl:w-[400px] shrink-0 border-b md:border-b-0 md:border-r flex flex-col h-auto md:h-full z-10 relative transition-all duration-300 ${
           isDarkMode 
             ? 'bg-slate-900/95 border-slate-800 text-white shadow-2xl' 
             : 'bg-white/95 border-slate-100 text-slate-800 shadow-[5px_0_30px_rgba(15,23,42,0.03)] backdrop-blur-md'
         }`}
       >
         {/* Soft Ambient Diffused Light Glow inside sidebar header */}
-        <div className="absolute top-0 left-0 right-0 h-[100px] bg-gradient-to-b from-blue-500/5 via-emerald-500/2 to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[80px] bg-gradient-to-b from-blue-500/5 via-emerald-500/2 to-transparent pointer-events-none" />
 
         {/* Header Branding Row */}
         <div className={`p-4 border-b flex items-center justify-between transition-colors duration-300 relative z-10 ${
@@ -1299,9 +1307,9 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
       </div>
 
       {/* LIVE GOOGLE MAPS CORE VIEWPORT */}
-      <div className="flex-1 h-full relative min-h-[400px]">
+      <div className="flex-1 h-full relative min-h-[52vh] md:min-h-[400px]">
         {/* Soft, Diffused Lighting Visual Indicator Overlay */}
-        <div className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-[0_8px_30px_rgba(15,23,42,0.06)] font-mono text-xs max-w-xs pointer-events-none select-none">
+        <div className="absolute top-3 left-3 right-3 md:right-auto md:max-w-xs z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-[0_8px_30px_rgba(15,23,42,0.06)] font-mono text-xs pointer-events-none select-none">
           <div className="font-bold text-slate-900 dark:text-white mb-0.5 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             {ui.interactiveMap}
@@ -1319,11 +1327,13 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             mapId="DEMO_MAP_ID"
             colorScheme={isDarkMode ? 'DARK' : 'LIGHT'}
             styles={isDarkMode ? MAP_DARK_STYLES : MAP_LIGHT_STYLES}
-            className="w-full h-full min-h-[400px]"
+            className="w-full h-full min-h-[52vh] md:min-h-[400px]"
             disableDefaultUI={false}
             mapTypeControl={false}
             onClick={handleMapClick}
-            gestureHandling="cooperative"
+            gestureHandling={isMobile ? 'greedy' : 'cooperative'}
+            draggable
+            scrollwheel
             internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio', 'ais_demo_api_key_applet_ts9a8b7c6d']}
             clickableIcons={false}
           >
