@@ -113,7 +113,7 @@ export default function ThessSpotakiLogo({ className = '', showText = true, size
             <span className="text-[#10B981]">Spotaki</span>
           </div>
           <span className="text-[9px] font-mono tracking-widest text-gray-400 font-bold uppercase mt-0.5 leading-none">
-            PREDICTIVE TRANSIT
+            Mobility app
           </span>
         </div>
       )}

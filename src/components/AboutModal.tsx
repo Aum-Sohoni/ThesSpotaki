@@ -39,50 +39,30 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
                 <ThessSpotakiLogo size="lg" className="mb-4" showText={false} />
                 <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">ThessSpotaki</h1>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm mx-auto">
-                  A city mobility companion for Thessaloniki with route awareness and accessibility-first guidance.
+                  Simple route and parking guidance for Thessaloniki.
                 </p>
               </div>
 
               <div className="space-y-6">
-                {/* APIs Section */}
                 <div className="space-y-2">
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.14em]">Built with:</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.14em]">Map features</p>
                   <ul className="list-disc list-inside space-y-1 ml-1">
-                    <li className="text-xs font-bold text-slate-600 dark:text-slate-400">Maps Javascript API</li>
-                    <li className="text-xs font-bold text-slate-600 dark:text-slate-400">Places UI Kit</li>
+                    <li className="text-xs font-bold text-slate-600 dark:text-slate-400">Interactive map</li>
+                    <li className="text-xs font-bold text-slate-600 dark:text-slate-400">Parking suggestions</li>
                   </ul>
                 </div>
 
-                {/* Primary Action Card: Maps Demo Key */}
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-linear-to-r from-indigo-500 to-indigo-400 rounded-2xl blur-sm opacity-20 group-hover:opacity-30 transition duration-500"></div>
-                  <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-900/30 shadow-sm">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                      Need your own Maps key? You can start with a credit-card free <a href="https://developers.google.com/maps/demo-key?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-demo-key_api-key-link" target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Maps Demo Key</a>.
-                    </p>
-
-                    <a
-                      href="https://developers.google.com/maps/demo-key?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-demo-key_api-key-link" 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98] text-sm"
-                    >
-                      Open demo key page
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-
-                {/* Secondary Info: Standard Key */}
-                <div className="text-center pt-2">
-                  <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 mb-2 uppercase tracking-wider">Need broader Google Maps features?</p>
+                <div className="rounded-2xl p-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    The map works automatically. If you need your own Google Maps setup later, you can get one from Google.
+                  </p>
                   <a
                     href="https://developers.google.com/maps/get-started?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-standard-key_api-key-link"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-bold text-xs transition-colors"
+                    className="inline-flex items-center gap-1.5 mt-3 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-bold text-xs transition-colors"
                   >
-                    Get a standard key
+                    Google Maps docs
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
