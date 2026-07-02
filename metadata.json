@@ -1,0 +1,8 @@
+{
+  "name": "ThesSpotaki",
+  "description": "AI-powered urban mobility, predictive navigation, and accessibility platform for Thessaloniki, Greece.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
