@@ -29,11 +29,9 @@ import {
   THESSALONIKI_CENTER, 
   ORIGIN_COORD, 
   PARKING_HUBS,
-  CONGESTION_PATH, 
   MAP_DARK_STYLES,
   DESTINATION_OPTIONS,
   DestinationOption,
-  ParkingHub
 } from '../data/mobilityData';
 
 // Custom calming light style for the map
@@ -115,6 +113,8 @@ interface MapComponentProps {
   setIsDarkMode: (isDark: boolean) => void;
 }
 
+type Language = 'en' | 'el';
+
 export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapComponentProps) {
   // State Machine: 1 = Onboarding, 2 = Predictive Analytics, 3 = Smart Intercept
   const [activeState, setActiveState] = useState<1 | 2 | 3>(1);
@@ -128,6 +128,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
   const [textSize, setTextSize] = useState<'normal' | 'large' | 'extra'>('normal');
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [subtitles, setSubtitles] = useState('');
+  const [language, setLanguage] = useState<Language>('en');
   
   // Municipality Assistance Modal State
   const [isAssistanceOpen, setIsAssistanceOpen] = useState(false);
@@ -166,6 +167,180 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
 
   // Find currently active Destination Street Options
   const activeDest = DESTINATION_OPTIONS.find(d => d.id === selectedDestId) || DESTINATION_OPTIONS[0];
+
+  const ui = language === 'el' ? {
+    resetRouteFlow: 'Επαναφορά διαδρομής',
+    text: 'Κείμενο:',
+    mute: 'Σίγαση',
+    speak: 'Ομιλία',
+    stepStart: '1. ΕΝΑΡΞΗ',
+    stepTraffic: '2. ΚΙΝΗΣΗ',
+    stepParking: '3. ΣΤΑΘΜΕΥΣΗ',
+    accessibilitySubtitles: 'Υπότιτλοι προσβασιμότητας',
+    locationSelected: 'Η τοποθεσία επιλέχθηκε!',
+    routeSetup: 'Βήμα 1: Ρύθμιση διαδρομής',
+    setup: 'Ρύθμιση',
+    originLocation: 'Τοποθεσία αφετηρίας',
+    clickMapToPin: 'Κλικ στον χάρτη για pin',
+    searchPlaceholder: 'Αναζήτηση σημείου ή κλικ στον χάρτη...',
+    neighborhoods: 'Γειτονιές και σημεία Θεσσαλονίκης',
+    mapTip: '📍 Συμβουλή: Μπορείτε να κάνετε κλικ στον χάρτη για προσαρμοσμένο σημείο.',
+    destinationStreet: 'Προορισμός',
+    selectDestination: 'Επιλέξτε προορισμό:',
+    accessProfile: 'Προφίλ μετακίνησης',
+    reduced: 'Περιορισμένη',
+    elderly: 'Ηλικιωμένος',
+    delivery: 'Delivery',
+    analyzeRoute: 'Ανάλυση διαδρομής',
+    trafficOverview: 'Βήμα 2: Επισκόπηση κίνησης',
+    live: 'Ζωντανά',
+    currentTravelTime: 'Τρέχων χρόνος διαδρομής',
+    trafficOverhead: 'καθυστέρηση λόγω κίνησης μέσω',
+    destinationRisk: 'ΚΙΝΔΥΝΟΣ ΣΤΑΘΜΕΥΣΗΣ ΣΤΟΝ ΠΡΟΟΡΙΣΜΟ',
+    freeSlots: 'ελεύθερες θέσεις',
+    criticalRisk: 'Υψηλός κίνδυνος: το σημείο ενδέχεται να γεμίσει πριν την άφιξή σας.',
+    findNearbyParking: 'Βρες κοντινή στάθμευση',
+    parkingOptions: 'Βήμα 3: Επιλογές στάθμευσης',
+    optimized: 'Βελτιστοποιημένο',
+    arrivalWindow: 'ΠΑΡΑΘΥΡΟ ΩΡΑΣ ΑΦΙΞΗΣ',
+    now: 'Τώρα',
+    minWalk: 'λεπτά περπάτημα',
+    minPath: 'λεπτά διαδρομή',
+    rating: 'Αξιολόγηση',
+    recommendedHubs: 'Προτεινόμενοι κοντινοί χώροι στάθμευσης',
+    availabilityConfidence: 'Βεβαιότητα διαθεσιμότητας',
+    confidenceHigh: 'Υψηλή',
+    confidenceDesc: 'Βασίζεται σε ζωντανές τάσεις κίνησης και στάθμευσης.',
+    suggestedAction: 'Προτεινόμενη ενέργεια',
+    metersFromDestination: 'μ. από τον προορισμό',
+    stepFreeText: 'Προτείνεται στάθμευση στο',
+    stepFreeText2: 'με προσβάσιμη διαδρομή χωρίς σκαλοπάτια.',
+    stepFreeRamps: 'Ράμπες χωρίς σκαλοπάτια',
+    tactilePavings: 'Οδηγοί όδευσης',
+    startNavigation: 'Έναρξη πλοήγησης',
+    navActive: '✓ Πλοήγηση ενεργή προς',
+    pedestrianMapped: 'Η προσβάσιμη πεζή διαδρομή χαρτογραφήθηκε',
+    contactSupport: 'Επικοινωνία υποστήριξης',
+    liveCityUpdates: 'Ζωντανές ενημερώσεις κινητικότητας',
+    interactiveMap: 'Διαδραστικός χάρτης',
+    mapHint: 'Κάντε κλικ στον χάρτη για να ορίσετε σημείο αφετηρίας.',
+    origin: 'Αφετηρία',
+    target: 'Στόχος',
+    vacanciesOpen: 'ελεύθερες θέσεις',
+    municipality: 'Δήμος Θεσσαλονίκης',
+    supportDesk: 'Γραμμή υποστήριξης μετακίνησης πολιτών',
+    supportDesc: 'Χρειάζεστε υποστήριξη προσβασιμότητας ή καθοδήγηση; Καλέστε τα παρακάτω:',
+    citizenDesk: 'Γραμμή Πολιτών',
+    accessibilityDesk: 'Γραμμή Προσβασιμότητας',
+    assistantsHours: '✓ Η υποστήριξη προσβασιμότητας είναι διαθέσιμη 08:00 - 20:00.',
+    reserveSpot: 'Κράτηση θέσης',
+    avgPrice: 'Μέση τιμή',
+    perHour: '/ώρα',
+    closeSupport: 'Κλείσιμο υποστήριξης',
+    customLocationPinned: 'Προστέθηκε προσαρμοσμένο σημείο! Η διαδρομή ενημερώθηκε.',
+  } : {
+    resetRouteFlow: 'Reset Route Flow',
+    text: 'Text:',
+    mute: 'Mute',
+    speak: 'Speak',
+    stepStart: '1. START',
+    stepTraffic: '2. TRAFFIC',
+    stepParking: '3. PARKING',
+    accessibilitySubtitles: 'Accessibility Subtitles',
+    locationSelected: 'Location selected!',
+    routeSetup: 'Step 1: Route setup',
+    setup: 'Setup',
+    originLocation: 'Origin Location',
+    clickMapToPin: 'Click map to pin',
+    searchPlaceholder: 'Search landmarks or click map...',
+    neighborhoods: 'Thessaloniki Neighborhoods & Sights',
+    mapTip: '📍 Tip: You can click on the map to set a custom point.',
+    destinationStreet: 'Destination Street Corridor',
+    selectDestination: 'Select destination corridor:',
+    accessProfile: 'Access Mobility Profile',
+    reduced: 'Reduced',
+    elderly: 'Elderly',
+    delivery: 'Delivery',
+    analyzeRoute: 'Analyze Route',
+    trafficOverview: 'Step 2: Traffic overview',
+    live: 'Live',
+    currentTravelTime: 'Current Travel Time',
+    trafficOverhead: 'traffic overhead via',
+    destinationRisk: 'DESTINATION OCCUPANCY RISK',
+    freeSlots: 'Free Slots',
+    criticalRisk: 'Critical spot-loss risk: this block is likely to fill before you arrive.',
+    findNearbyParking: 'Find nearby parking',
+    parkingOptions: 'Step 3: Parking options',
+    optimized: 'Optimized',
+    arrivalWindow: 'PREDICT ARRIVAL TIME WINDOW',
+    now: 'Now',
+    minWalk: 'm Walk',
+    minPath: 'min path',
+    rating: 'Rating',
+    recommendedHubs: 'Recommended nearby parking hubs',
+    availabilityConfidence: 'Availability confidence',
+    confidenceHigh: 'High',
+    confidenceDesc: 'Based on live traffic and parking trends in the selected area.',
+    suggestedAction: 'Suggested action',
+    metersFromDestination: 'm from destination',
+    stepFreeText: 'Divert to',
+    stepFreeText2: 'with a verified step-free corridor.',
+    stepFreeRamps: 'Step-Free Ramps',
+    tactilePavings: 'Tactile Pavings',
+    startNavigation: 'Start navigation',
+    navActive: '✓ Navigation active: heading to',
+    pedestrianMapped: 'Pedestrian accessibility corridor mapped',
+    contactSupport: 'Contact support',
+    liveCityUpdates: 'Live city mobility updates',
+    interactiveMap: 'Interactive map',
+    mapHint: 'Click anywhere on the map to set a custom starting point.',
+    origin: 'Origin',
+    target: 'Target',
+    vacanciesOpen: 'Vacancies Open',
+    municipality: 'Thessaloniki Municipality',
+    supportDesk: 'Citizen mobility support desk',
+    supportDesc: 'Need wheelchair navigation support, temporary access permits, or live guidance? Contact the support desks below:',
+    citizenDesk: 'Citizen Helpline Desk',
+    accessibilityDesk: 'Accessibility Support Desk',
+    assistantsHours: '✓ Step-free accessibility assistants are available between 08:00 and 20:00.',
+    reserveSpot: 'Reserve spot',
+    avgPrice: 'Avg price',
+    perHour: '/hour',
+    closeSupport: 'Close support panel',
+    customLocationPinned: 'Custom location pinned! Travel paths dynamically adjusted.',
+  };
+
+  const distanceMeters = (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => {
+    const toRad = (deg: number) => deg * (Math.PI / 180);
+    const dLat = toRad(b.lat - a.lat);
+    const dLng = toRad(b.lng - a.lng);
+    const sa = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 6371000 * 2 * Math.atan2(Math.sqrt(sa), Math.sqrt(1 - sa));
+  };
+
+  const recommendedHubIdForDestination = (destination: DestinationOption) => {
+    let bestHub = PARKING_HUBS[0];
+    let bestScore = Number.NEGATIVE_INFINITY;
+
+    for (const hub of PARKING_HUBS) {
+      const dist = distanceMeters(hub.coordinate, destination.coordinate);
+      const projectedProbability = Math.max(
+        3,
+        Math.round(
+          hub.probabilityScore -
+          (selectedProfile === 'delivery' ? 12 : selectedProfile === 'elderly' ? 4 : 0)
+        )
+      );
+      const score = projectedProbability - dist / 35;
+      if (score > bestScore) {
+        bestScore = score;
+        bestHub = hub;
+      }
+    }
+    return bestHub.id;
+  };
 
   // Find the currently selected Parking Hub
   const activeHub = PARKING_HUBS.find(h => h.id === selectedHubId) || PARKING_HUBS[0];
@@ -250,18 +425,24 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
 
     let message = '';
     if (activeState === 1) {
-      message = `Welcome to ThessSpotaki, Thessaloniki's intelligent predictive mobility platform. Currently configured for a route from ${originText} to ${activeDest.name}. Please select your accessibility profile and click Analyze Predictive Route.`;
+      message = language === 'el'
+        ? `Καλώς ήρθατε στο ThessSpotaki. Η διαδρομή είναι από ${originText} προς ${activeDest.name}. Επιλέξτε προφίλ και πατήστε Ανάλυση διαδρομής.`
+        : `Welcome to ThessSpotaki. Your route is set from ${originText} to ${activeDest.name}. Please select your profile and click Analyze Route.`;
     } else if (activeState === 2) {
-      message = `Congestion alert on your route to ${activeDest.name}. Predicted travel time is ${activeDest.etaTrafficMin} minutes, which includes a ${activeDest.trafficDelayMin} minute traffic overhead via ${activeDest.congestionStreet}. Real-time predictive confidence of finding a free spot on-street at your destination block is critically low at only ${predictiveDestinationConfidence} percent. We advise searching for nearby accessibility-approved intercept hubs.`;
+      message = language === 'el'
+        ? `Υπάρχει αυξημένη κίνηση προς ${activeDest.name}. Ο εκτιμώμενος χρόνος είναι ${activeDest.etaTrafficMin} λεπτά, με καθυστέρηση ${activeDest.trafficDelayMin} λεπτών μέσω ${activeDest.congestionStreet}.`
+        : `Congestion alert on your route to ${activeDest.name}. Predicted travel time is ${activeDest.etaTrafficMin} minutes, which includes a ${activeDest.trafficDelayMin} minute traffic overhead via ${activeDest.congestionStreet}.`;
     } else if (activeState === 3) {
-      message = `We have calculated the optimal detour solution. We recommend parking at ${activeHub.name}, located ${activeHub.distanceMeters} meters from your destination. The predictive vacant space likelihood is ${calculatedProbability} percent with ${calculatedVacancies} empty slots. The pedestrian walking corridor is verified step-free with zero stairs and ramped curbs. Click Accept Intercept to navigate.`;
+      message = language === 'el'
+        ? `Προτείνουμε στάθμευση στο ${activeHub.name}, σε απόσταση ${activeHub.distanceMeters} μέτρων από τον προορισμό. Πιθανότητα διαθεσιμότητας ${calculatedProbability} τοις εκατό, με ${calculatedVacancies} κενές θέσεις.`
+        : `We recommend parking at ${activeHub.name}, located ${activeHub.distanceMeters} meters from your destination. The predictive vacant space likelihood is ${calculatedProbability} percent with ${calculatedVacancies} empty slots.`;
     }
 
     setIsSpeaking(true);
     setSubtitles(message);
 
     const utterance = new SpeechSynthesisUtterance(message);
-    utterance.lang = 'en-US';
+    utterance.lang = language === 'el' ? 'el-GR' : 'en-US';
     utterance.rate = 0.95; // Slightly slower for clear accessibility presentation
 
     utterance.onend = () => {
@@ -337,6 +518,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
   // Change destination street
   const handleSelectStreet = (option: DestinationOption) => {
     setSelectedDestId(option.id);
+    setSelectedHubId(recommendedHubIdForDestination(option));
     setIsStreetDropdownOpen(false);
     // Reset back to setup phase since path changes
     setActiveState(1);
@@ -364,7 +546,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
       setOriginText(customName);
       
       // Flash a beautiful calming toast
-      setShowPinNotification(`Custom location pinned! Travel paths dynamically adjusted.`);
+      setShowPinNotification(ui.customLocationPinned);
       setTimeout(() => setShowPinNotification(null), 4000);
 
       // Re-center around custom node
@@ -380,6 +562,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
       {/* SIDEBAR UTILITY DRAWER (Width: 380px) */}
       <div 
         id="thesspotaki-sidebar" 
+        onWheelCapture={(e) => e.stopPropagation()}
         className={`w-full md:w-[380px] shrink-0 border-b md:border-b-0 md:border-r flex flex-col h-auto md:h-full z-10 relative transition-all duration-300 ${
           isDarkMode 
             ? 'bg-slate-900/95 border-slate-800 text-white shadow-2xl' 
@@ -408,6 +591,18 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             >
               {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-600" />}
             </button>
+
+            <button
+              onClick={() => setLanguage(prev => prev === 'en' ? 'el' : 'en')}
+              className={`px-2.5 py-2 rounded-xl border text-[10px] font-bold tracking-wide transition-all ${
+                isDarkMode
+                  ? 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700'
+                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs'
+              }`}
+              title="Toggle language"
+            >
+              {language === 'en' ? 'EN' : 'EL'}
+            </button>
             
             {/* Reset flow */}
             {(activeState > 1 || navigationTriggered || originText !== 'Aristotelous Square') && (
@@ -418,7 +613,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     ? 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white' 
                     : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 shadow-xs'
                 }`}
-                title="Reset Route Flow"
+                title={ui.resetRouteFlow}
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -431,7 +626,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
           isDarkMode ? 'bg-slate-950/60 border-slate-800 text-slate-400' : 'bg-slate-50/30 border-slate-100 text-slate-500'
         }`}>
           <div className="flex items-center gap-1.5">
-            <span className="text-slate-400 dark:text-slate-500 mr-1 font-bold">Text:</span>
+            <span className="text-slate-400 dark:text-slate-500 mr-1 font-bold">{ui.text}</span>
             <button 
               onClick={() => setTextSize('normal')} 
               className={`px-2 py-0.5 rounded-lg font-black text-[10px] border transition-all ${
@@ -475,7 +670,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             }`}
           >
             {isSpeaking ? <VolumeX className="w-3.5 h-3.5 text-white" /> : <Volume2 className="w-3.5 h-3.5 text-blue-600" />}
-            <span>{isSpeaking ? 'Mute' : 'Speak'}</span>
+            <span>{isSpeaking ? ui.mute : ui.speak}</span>
           </button>
         </div>
 
@@ -492,7 +687,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             }`}
           >
             <span className={`w-2 h-2 rounded-full ${activeState === 1 ? 'bg-blue-600 animate-pulse' : 'bg-slate-300 dark:bg-slate-700'}`} />
-            1. ONBOARD
+            {ui.stepStart}
           </button>
           <span className="text-slate-300 dark:text-slate-700 font-bold">➔</span>
           <button 
@@ -505,7 +700,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             disabled={activeState < 2}
           >
             <span className={`w-2 h-2 rounded-full ${activeState === 2 ? 'bg-rose-500 animate-pulse' : 'bg-slate-300 dark:bg-slate-700'}`} />
-            2. PREDICTIVE
+            {ui.stepTraffic}
           </button>
           <span className="text-slate-300 dark:text-slate-700 font-bold">➔</span>
           <button 
@@ -518,7 +713,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             disabled={activeState < 3}
           >
             <span className={`w-2 h-2 rounded-full ${activeState === 3 ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300 dark:bg-slate-700'}`} />
-            3. INTERCEPT
+            {ui.stepParking}
           </button>
         </div>
 
@@ -529,7 +724,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
           }`}>
             <Volume2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5 animate-bounce" />
             <div>
-              <span className="text-[9px] font-bold text-blue-600 dark:text-blue-400 uppercase block leading-none mb-1">Accessibility Subtitles</span>
+              <span className="text-[9px] font-bold text-blue-600 dark:text-blue-400 uppercase block leading-none mb-1">{ui.accessibilitySubtitles}</span>
               "{subtitles}"
             </div>
           </div>
@@ -546,7 +741,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             >
               <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <div>
-                <strong className="block text-emerald-950">Location Selected Successfully!</strong>
+                <strong className="block text-emerald-950">{ui.locationSelected}</strong>
                 {showPinNotification}
               </div>
             </motion.div>
@@ -554,16 +749,16 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
         </AnimatePresence>
 
         {/* CENTRAL SCROLLABLE SIDEBAR ACTION HUB */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar relative z-10">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-6 custom-scrollbar relative z-10">
 
           {/* STATE 1: Dynamic Destination Street Picker & Profile Setup */}
           <div className={`space-y-4 transition-all duration-300 ${activeState !== 1 ? 'opacity-30 hover:opacity-100' : 'opacity-100'}`}>
             <div className="flex items-center justify-between">
               <h2 className={`uppercase tracking-wider font-bold text-blue-600 dark:text-blue-400 font-mono ${getTextClass('xs')}`}>
-                State 1: Search & Destination
+                {ui.routeSetup}
               </h2>
               {activeState === 1 && (
-                <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-bold uppercase tracking-widest font-mono">Setup</span>
+                <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-bold uppercase tracking-widest font-mono">{ui.setup}</span>
               )}
             </div>
 
@@ -574,10 +769,10 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   <label className={`font-semibold transition-colors duration-300 ${
                     isDarkMode ? 'text-slate-300' : 'text-slate-700'
                   } ${getTextClass('xs')}`}>
-                    Origin Location
+                    {ui.originLocation}
                   </label>
                   <span className="text-[10px] text-blue-600 font-bold flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 animate-pulse text-blue-600" /> Click Map to Pin
+                    <MapPin className="w-3.5 h-3.5 animate-pulse text-blue-600" /> {ui.clickMapToPin}
                   </span>
                 </div>
                 
@@ -590,7 +785,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                       setIsLandmarkDropdownOpen(true);
                     }}
                     onFocus={() => setIsLandmarkDropdownOpen(true)}
-                    placeholder="Search landmarks or click map..."
+                    placeholder={ui.searchPlaceholder}
                     className={`w-full p-3 text-xs rounded-xl border transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono ${
                       isDarkMode 
                         ? 'bg-slate-900 border-slate-700 text-white focus:border-blue-500' 
@@ -621,7 +816,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     <div className={`p-2 border-b text-[9px] font-black uppercase tracking-wider ${
                       isDarkMode ? 'bg-slate-950 text-slate-500 border-slate-800' : 'bg-slate-50 text-slate-400 border-slate-100'
                     }`}>
-                      Thessaloniki Neighborhoods & Sights
+                      {ui.neighborhoods}
                     </div>
                     {LANDMARKS.filter(lm => lm.name.toLowerCase().includes(originText.toLowerCase()) || originText.trim() === '' || originText.startsWith('Custom')).map((lm) => (
                       <button
@@ -649,7 +844,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     <div className={`p-2.5 text-[9.5px] italic leading-tight text-center border-t ${
                       isDarkMode ? 'bg-slate-950 border-slate-800 text-slate-400' : 'bg-slate-50 border-slate-100 text-slate-500'
                     }`}>
-                      📍 Tip: You can also tap anywhere on the map to set a custom pin coordinates manually.
+                      {ui.mapTip}
                     </div>
                   </div>
                 )}
@@ -660,7 +855,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                 <label className={`font-semibold transition-colors duration-300 ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-700'
                 } ${getTextClass('xs')}`}>
-                  Destination Street Corridor
+                  {ui.destinationStreet}
                 </label>
                 
                 <button
@@ -683,7 +878,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     <div className={`p-2 border-b text-[9px] font-black uppercase ${
                       isDarkMode ? 'bg-slate-950 text-slate-500 border-slate-800' : 'bg-slate-50 text-slate-400 border-slate-100'
                     }`}>
-                      Select Destination Corridor:
+                      {ui.selectDestination}
                     </div>
                     {DESTINATION_OPTIONS.map((option) => (
                       <button
@@ -711,16 +906,16 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                 <label className={`font-semibold transition-colors duration-300 block ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-700'
                 } ${getTextClass('xs')}`}>
-                  Access Mobility Profile Preset
+                  {ui.accessProfile}
                 </label>
                 
                 <div className={`grid grid-cols-3 gap-1.5 p-1.5 rounded-2xl border transition-colors duration-300 ${
                   isDarkMode ? 'bg-slate-950/80 border-slate-800' : 'bg-slate-50 border-slate-100'
                 }`}>
                   {[
-                    { id: 'mobility', label: '♿ Reduced', icon: Accessibility },
-                    { id: 'elderly', label: '👵 Elderly', icon: Clock },
-                    { id: 'delivery', label: '📦 Delivery', icon: Briefcase }
+                    { id: 'mobility', label: ui.reduced, icon: Accessibility },
+                    { id: 'elderly', label: ui.elderly, icon: Clock },
+                    { id: 'delivery', label: ui.delivery, icon: Briefcase }
                   ].map((profile) => {
                     const Icon = profile.icon;
                     const isActive = selectedProfile === profile.id;
@@ -737,7 +932,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                         }`}
                       >
                         <Icon className="w-4 h-4 mb-1" />
-                        <span className="text-[9px] font-black uppercase leading-none tracking-wider">{profile.label.split(' ')[1]}</span>
+                        <span className="text-[9px] font-black uppercase leading-none tracking-wider">{profile.label}</span>
                       </button>
                     );
                   })}
@@ -752,7 +947,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   className={`w-full py-3.5 px-4 rounded-2xl font-black bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 mt-4 ${getTextClass('sm')}`}
                 >
                   <Sparkles className="w-4 h-4 text-white" />
-                  Analyze Predictive Route
+                  {ui.analyzeRoute}
                 </motion.button>
               )}
             </div>
@@ -771,10 +966,10 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
               >
                 <div className="flex items-center justify-between">
                   <h2 className={`uppercase tracking-wider font-bold text-rose-500 font-mono flex items-center gap-1.5 ${getTextClass('xs')}`}>
-                    State 2: Congestion Analytics
+                    {ui.trafficOverview}
                   </h2>
                   {activeState === 2 && (
-                    <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 font-bold uppercase tracking-widest font-mono">Live Block</span>
+                    <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 font-bold uppercase tracking-widest font-mono">{ui.live}</span>
                   )}
                 </div>
 
@@ -783,12 +978,12 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   isDarkMode ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-50/50 border-slate-100'
                 } space-y-2.5`}>
                   <div className="flex items-baseline justify-between">
-                    <span className={`font-semibold ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} ${getTextClass('xs')}`}>Current Travel Time</span>
+                    <span className={`font-semibold ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} ${getTextClass('xs')}`}>{ui.currentTravelTime}</span>
                     <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'} ${getTextClass('base')}`}>ETA: {activeDest.etaTrafficMin} min</span>
                   </div>
                   <div className={`text-rose-500 font-semibold flex items-center gap-1.5 ${getTextClass('xs')}`}>
                     <AlertTriangle className="w-4 h-4 shrink-0" />
-                    <span>+{activeDest.trafficDelayMin} min traffic overhead via {activeDest.congestionStreet}</span>
+                    <span>+{activeDest.trafficDelayMin} min {ui.trafficOverhead} {activeDest.congestionStreet}</span>
                   </div>
                 </div>
 
@@ -799,9 +994,9 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <Percent className="w-4 h-4 text-rose-500" />
-                      <span className={`font-bold font-mono ${isDarkMode ? 'text-slate-300' : 'text-slate-600'} ${getTextClass('xs')}`}>DESTINATION OCCUPANCY RISK</span>
+                      <span className={`font-bold font-mono ${isDarkMode ? 'text-slate-300' : 'text-slate-600'} ${getTextClass('xs')}`}>{ui.destinationRisk}</span>
                     </div>
-                    <span className={`font-black text-rose-500 ${getTextClass('xs')}`}>{predictiveDestinationConfidence}% Free Slots</span>
+                    <span className={`font-black text-rose-500 ${getTextClass('xs')}`}>{predictiveDestinationConfidence}% {ui.freeSlots}</span>
                   </div>
 
                   {/* Horizontal Bar Visualizer */}
@@ -821,7 +1016,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                       ? 'bg-amber-500/5 border-amber-500/10 text-amber-200' 
                       : 'bg-amber-500/5 border-amber-500/10 text-amber-700'
                   }`}>
-                    Critical Spot-Loss Risk: This block is predicted to be 100% occupied before your arrival window.
+                    {ui.criticalRisk}
                   </div>
                 </div>
 
@@ -833,7 +1028,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     className={`w-full py-3.5 px-4 rounded-2xl font-black bg-gradient-to-r from-rose-600 to-rose-500 text-white transition-all shadow-lg shadow-rose-500/10 flex items-center justify-center gap-2 ${getTextClass('sm')}`}
                   >
                     <Zap className="w-4 h-4 text-white animate-pulse" />
-                    Search Intercept Hubs
+                    {ui.findNearbyParking}
                   </motion.button>
                 )}
               </motion.div>
@@ -853,9 +1048,9 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
               >
                 <div className="flex items-center justify-between">
                   <h2 className={`uppercase tracking-wider font-bold text-emerald-500 font-mono ${getTextClass('xs')}`}>
-                    State 3: Smart Intercept Reroute
+                    {ui.parkingOptions}
                   </h2>
-                  <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold uppercase tracking-widest font-mono">Optimized</span>
+                  <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold uppercase tracking-widest font-mono">{ui.optimized}</span>
                 </div>
 
                 {/* ARRIVAL TIMESPAN PICKER */}
@@ -865,13 +1060,13 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   <div className="flex items-center justify-between">
                     <span className={`font-mono font-bold ${
                       isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                    } ${getTextClass('xs')}`}>PREDICT ARRIVAL TIME WINDOW</span>
-                    <span className="text-[9px] text-blue-600 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded font-bold font-mono">LIVE FEED</span>
+                    } ${getTextClass('xs')}`}>{ui.arrivalWindow}</span>
+                    <span className="text-[9px] text-blue-600 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded font-bold font-mono">{ui.live}</span>
                   </div>
 
                   <div className="grid grid-cols-4 gap-1.5">
                     {[
-                      { offset: 0, label: 'Now' },
+                      { offset: 0, label: ui.now },
                       { offset: 15, label: '+15m' },
                       { offset: 30, label: '+30m' },
                       { offset: 60, label: '+1h' }
@@ -898,7 +1093,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   <label className={`font-bold font-mono block ${
                     isDarkMode ? 'text-slate-400' : 'text-slate-600'
                   } ${getTextClass('xs')}`}>
-                    PREDICTED NEARBY INTERCEPT HUBS
+                    {ui.recommendedHubs}
                   </label>
 
                   <div className="space-y-2.5 max-h-[170px] overflow-y-auto custom-scrollbar pr-1">
@@ -948,7 +1143,13 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                           <p className={`text-[10px] mb-2 font-mono ${
                             isDarkMode ? 'text-slate-400' : 'text-slate-500'
                           }`}>
-                            {hub.distanceMeters}m Walk • {hub.walkingTimeMin} min path
+                            {hub.distanceMeters}m {ui.minWalk} • {hub.walkingTimeMin} {ui.minPath}
+                          </p>
+
+                          <p className={`text-[10px] mb-2 font-mono ${
+                            isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                          }`}>
+                            {ui.avgPrice}: €{hub.pricePerHour.toFixed(2)} {ui.perHour}
                           </p>
 
                           <div className="flex flex-wrap gap-1.5 items-center">
@@ -966,9 +1167,22 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                                 ? 'bg-blue-950/40 border-blue-900/30 text-blue-400' 
                                 : 'bg-blue-50 border-blue-100 text-blue-600'
                             }`}>
-                              Rating: {hub.accessibilityRating}
+                              {ui.rating}: {hub.accessibilityRating}
                             </span>
                           </div>
+
+                          {isSelected && (
+                            <button
+                              type="button"
+                              className={`mt-3 w-full py-2 rounded-xl border font-black font-mono text-[10px] uppercase tracking-wide transition-all ${
+                                isDarkMode
+                                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+                                  : 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                              }`}
+                            >
+                              {ui.reserveSpot}
+                            </button>
+                          )}
                         </div>
                       );
                     })}
@@ -984,9 +1198,9 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                       isDarkMode ? 'text-slate-400' : 'text-slate-500'
                     }`}>
                       <Gauge className="w-4 h-4 text-[#10B981]" />
-                      MODEL FORECAST CERTAINTY
+                      {ui.availabilityConfidence}
                     </span>
-                    <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{modelCertaintyScore}% (High)</span>
+                    <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{modelCertaintyScore}% ({ui.confidenceHigh})</span>
                   </div>
                   <div className={`h-1.5 w-full rounded-full overflow-hidden ${
                     isDarkMode ? 'bg-slate-800' : 'bg-slate-200'
@@ -996,7 +1210,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   <p className={`text-[9px] leading-tight font-mono ${
                     isDarkMode ? 'text-slate-500' : 'text-slate-400'
                   }`}>
-                    Generated via real-time sensory data matching from HIT & CERTH predictive historical block occupancy tensors.
+                    {ui.confidenceDesc}
                   </p>
                 </div>
 
@@ -1010,15 +1224,15 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   
                   <div className="flex items-center justify-between">
                     <span className="bg-emerald-500 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider font-mono">
-                      Recommended Action
+                      {ui.suggestedAction}
                     </span>
-                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold">{activeHub.walkingTimeMin}m Walk</span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold">{activeHub.walkingTimeMin} {ui.minPath}</span>
                   </div>
 
                   <p className={`text-xs leading-relaxed ${
                     isDarkMode ? 'text-slate-200' : 'text-slate-700'
                   }`}>
-                    Divert to <strong className="text-emerald-600 dark:text-emerald-300">{activeHub.name}</strong> ({activeHub.distanceMeters}m from destination). Verified step-free accessible pedestrian corridor to target destination (0 stairs, ramped curbs).
+                    {ui.stepFreeText} <strong className="text-emerald-600 dark:text-emerald-300">{activeHub.name}</strong> ({activeHub.distanceMeters} {ui.metersFromDestination}) {ui.stepFreeText2}
                   </p>
 
                   <div className={`flex items-center gap-3.5 text-[10px] font-mono pt-1.5 border-t ${
@@ -1026,11 +1240,11 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   }`}>
                     <div className="flex items-center gap-1">
                       <Accessibility className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>Step-Free Ramps</span>
+                      <span>{ui.stepFreeRamps}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Check className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>Tactile Pavings</span>
+                      <span>{ui.tactilePavings}</span>
                     </div>
                   </div>
                 </div>
@@ -1044,14 +1258,14 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     className={`w-full py-3.5 px-4 rounded-2xl font-black bg-emerald-500 hover:bg-emerald-400 text-black transition-all shadow-lg shadow-emerald-500/10 flex items-center justify-center gap-2 ${getTextClass('sm')}`}
                   >
                     <Navigation2 className="w-4 h-4 fill-current text-black animate-bounce" />
-                    Accept Intercept & Navigate
+                    {ui.startNavigation}
                   </motion.button>
                 ) : (
                   <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center text-xs text-emerald-600 dark:text-emerald-400 font-bold font-mono shadow-xs">
-                    ✓ DETOUR ACTIVE: PARKING RESERVED AT {activeHub.name.toUpperCase()}
+                    {ui.navActive} {activeHub.name.toUpperCase()}
                     <p className={`text-[9px] font-normal mt-1 uppercase ${
                       isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                    }`}>Pedestrian accessibility corridor mapped</p>
+                    }`}>{ui.pedestrianMapped}</p>
                   </div>
                 )}
               </motion.div>
@@ -1075,11 +1289,11 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             }`}
           >
             <Phone className="w-4 h-4 text-blue-600" />
-            Call Helpline for Assistance
+            {ui.contactSupport}
           </motion.button>
           
           <div className="text-[9px] text-center text-slate-400 dark:text-slate-500 font-mono font-bold tracking-wider uppercase">
-            CERTH & HIT REAL-TIME MOBILITY FEED
+            {ui.liveCityUpdates}
           </div>
         </div>
       </div>
@@ -1090,10 +1304,10 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
         <div className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-[0_8px_30px_rgba(15,23,42,0.06)] font-mono text-xs max-w-xs pointer-events-none select-none">
           <div className="font-bold text-slate-900 dark:text-white mb-0.5 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            Interactive Map Selection
+            {ui.interactiveMap}
           </div>
           <p className="text-[10px] text-slate-500 leading-normal">
-            Click anywhere on the map to manually set a dynamic custom starting point coordinates instantly.
+            {ui.mapHint}
           </p>
         </div>
 
@@ -1109,6 +1323,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             disableDefaultUI={false}
             mapTypeControl={false}
             onClick={handleMapClick}
+            gestureHandling="cooperative"
             internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio', 'ais_demo_api_key_applet_ts9a8b7c6d']}
             clickableIcons={false}
           >
@@ -1117,7 +1332,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
               <div className="relative group flex flex-col items-center">
                 <div className="bg-slate-900 text-white dark:bg-white dark:text-slate-800 text-[9px] font-bold font-mono px-2.5 py-1 rounded-xl shadow-xl border border-slate-700/20 whitespace-nowrap mb-1 flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-blue-500" />
-                  Origin: {originText.split(' (')[0]}
+                  {ui.origin}: {originText.split(' (')[0]}
                 </div>
                 <div className="w-6 h-6 rounded-full bg-blue-600 border-2 border-white flex items-center justify-center shadow-xl">
                   <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
@@ -1129,7 +1344,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             <AdvancedMarker position={activeDest.coordinate}>
               <div className="relative group flex flex-col items-center">
                 <div className="bg-slate-900 text-white dark:bg-white dark:text-slate-800 text-[9px] font-bold font-mono px-2.5 py-1 rounded-xl shadow-xl border border-slate-700/20 whitespace-nowrap mb-1 flex items-center gap-1">
-                  🏁 Target: {activeDest.name.split(' (')[0]}
+                  🏁 {ui.target}: {activeDest.name.split(' (')[0]}
                 </div>
                 <div className="w-6 h-6 rounded-full bg-rose-500 border-2 border-white flex items-center justify-center shadow-xl">
                   <div className="w-2 h-2 bg-white rounded-full" />
@@ -1140,7 +1355,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
             {/* Red Bottleneck Path connected dynamically to originCoord */}
             {activeState >= 2 && (
               <Polyline 
-                path={[originCoord, ...CONGESTION_PATH.slice(1)]}
+                path={[originCoord, activeDest.coordinate]}
                 strokeColor="#EF4444"
                 strokeWeight={activeState === 2 ? 6 : 2.5}
                 strokeOpacity={activeState === 2 ? 1.0 : 0.35}
@@ -1152,7 +1367,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
               <>
                 {/* Solid Hellenic Blue Polyline connected dynamically to originCoord */}
                 <Polyline 
-                  path={[originCoord, ...activeHub.routePath.slice(1)]}
+                  path={[originCoord, activeHub.coordinate]}
                   strokeColor="#2563EB"
                   strokeWeight={6}
                   strokeOpacity={1.0}
@@ -1160,7 +1375,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
 
                 {/* Mint Green Dotted walking path from selected Hub to Destination */}
                 <Polyline 
-                  path={activeHub.walkingPath}
+                  path={[activeHub.coordinate, activeDest.coordinate]}
                   strokeColor="#10B981"
                   strokeWeight={3.5}
                   strokeOpacity={0.9}
@@ -1177,7 +1392,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     {/* Floating Bubble Pin */}
                     <div className="bg-[#10B981] text-black text-xs font-black px-3.5 py-2.5 rounded-2xl shadow-2xl border-2 border-white flex items-center gap-1.5 whitespace-nowrap -translate-y-2 select-none">
                       <span className="w-4 h-4 rounded-full bg-black/20 flex items-center justify-center text-[9px] text-white font-mono font-black">P</span>
-                      {activeHub.name} | {calculatedVacancies} Vacancies Open
+                      {activeHub.name} | {calculatedVacancies} {ui.vacanciesOpen}
                     </div>
                     {/* Arrow Pointer */}
                     <div className="w-3.5 h-3.5 bg-[#10B981] rotate-45 border-r border-b border-white -translate-y-3.5 shadow-lg" />
@@ -1224,14 +1439,14 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                   <Phone className="w-5 h-5 animate-bounce" />
                 </div>
                 <div>
-                  <h3 className={`text-sm font-black uppercase leading-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Thessaloniki Municipality</h3>
-                  <p className="text-[10px] text-slate-400">Direct Citizen & Mobility Assistance Desk</p>
+                  <h3 className={`text-sm font-black uppercase leading-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{ui.municipality}</h3>
+                  <p className="text-[10px] text-slate-400">{ui.supportDesk}</p>
                 </div>
               </div>
 
               <div className="space-y-4 my-6 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
                 <p>
-                  Need wheelchair navigation support, temporary access permits, or live guidance? Contact the municipal support desks below:
+                  {ui.supportDesc}
                 </p>
 
                 <div className="space-y-2">
@@ -1244,7 +1459,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     }`}
                   >
                     <div>
-                      <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-black">Citizen Helpline Desk</span>
+                      <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-black">{ui.citizenDesk}</span>
                       <strong>+30 2313 317777</strong>
                     </div>
                     <ChevronDown className="w-4 h-4 -rotate-90 text-slate-400" />
@@ -1259,7 +1474,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                     }`}
                   >
                     <div>
-                      <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-black">Accessibility Support Desk</span>
+                      <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-black">{ui.accessibilityDesk}</span>
                       <strong>+30 2313 318204</strong>
                     </div>
                     <ChevronDown className="w-4 h-4 -rotate-90 text-slate-400" />
@@ -1267,7 +1482,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-300 text-[10px] leading-relaxed">
-                  ✓ Step-free accessibility assistants are available for active dispatches between 08:00 and 20:00.
+                  {ui.assistantsHours}
                 </div>
               </div>
 
@@ -1275,7 +1490,7 @@ export default function MapComponent({ apiKey, isDarkMode, setIsDarkMode }: MapC
                 onClick={() => setIsAssistanceOpen(false)}
                 className="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-blue-600/10"
               >
-                Close Helpline Panel
+                {ui.closeSupport}
               </button>
             </motion.div>
           </div>

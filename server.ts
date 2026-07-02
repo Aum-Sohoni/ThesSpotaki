@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 // Load env vars
 dotenv.config();
+const DEFAULT_GOOGLE_MAPS_API_KEY = "AIzaSyDZpn9e3Xww8FMMW7U49bMNEbg_TiuEmOw";
 
 async function startServer() {
   const app = express();
@@ -15,8 +16,7 @@ async function startServer() {
 
   // API Routes
   app.get("/api/config", (req, res) => {
-    // Check process.env first
-    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY;
     res.json({ apiKey: apiKey || null });
   });
 

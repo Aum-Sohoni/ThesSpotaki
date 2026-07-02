@@ -37,16 +37,16 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
             <div className="p-8 sm:p-10">
               <div className="flex flex-col items-center text-center mb-10">
                 <ThessSpotakiLogo size="lg" className="mb-4" showText={false} />
-                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">ThessSpotaki</h1>
+                <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">ThessSpotaki</h1>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm mx-auto">
-                  An AI-powered urban mobility, predictive navigation, and accessibility platform for Thessaloniki, Greece.
+                  A city mobility companion for Thessaloniki with route awareness and accessibility-first guidance.
                 </p>
               </div>
 
               <div className="space-y-6">
                 {/* APIs Section */}
                 <div className="space-y-2">
-                  <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">This applet uses the following APIs:</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.14em]">Built with:</p>
                   <ul className="list-disc list-inside space-y-1 ml-1">
                     <li className="text-xs font-bold text-slate-600 dark:text-slate-400">Maps Javascript API</li>
                     <li className="text-xs font-bold text-slate-600 dark:text-slate-400">Places UI Kit</li>
@@ -58,16 +58,16 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
                   <div className="absolute -inset-0.5 bg-linear-to-r from-indigo-500 to-indigo-400 rounded-2xl blur-sm opacity-20 group-hover:opacity-30 transition duration-500"></div>
                   <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-900/30 shadow-sm">
                     <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                      To power this applet, you can use a credit-card free <a href="https://developers.google.com/maps/demo-key?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-demo-key_api-key-link" target="_blank" rel="noopener noreferrer" className="font-black text-indigo-600 dark:text-indigo-400 hover:underline">Maps Demo Key</a>.
+                      Need your own Maps key? You can start with a credit-card free <a href="https://developers.google.com/maps/demo-key?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-demo-key_api-key-link" target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Maps Demo Key</a>.
                     </p>
 
                     <a
                       href="https://developers.google.com/maps/demo-key?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-demo-key_api-key-link" 
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98] text-sm"
+                      className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98] text-sm"
                     >
-                      Get a demo key
+                      Open demo key page
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   </div>
@@ -75,7 +75,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
 
                 {/* Secondary Info: Standard Key */}
                 <div className="text-center pt-2">
-                  <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mb-2 uppercase tracking-wider">If you want to add additional GMP capabilities:</p>
+                  <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 mb-2 uppercase tracking-wider">Need broader Google Maps features?</p>
                   <a
                     href="https://developers.google.com/maps/get-started?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-standard-key_api-key-link"
                     target="_blank"
@@ -90,9 +90,9 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
                 <div className="pt-2">
                   <button
                     onClick={onClose}
-                    className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black py-4 rounded-2xl transition-all hover:bg-slate-800 dark:hover:bg-slate-100 active:scale-[0.98] text-lg tracking-tight shadow-xl"
+                    className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 rounded-2xl transition-all hover:bg-slate-800 dark:hover:bg-slate-100 active:scale-[0.98] text-lg tracking-tight shadow-xl"
                   >
-                    Start exploring
+                    Continue
                   </button>
                 </div>
               </div>

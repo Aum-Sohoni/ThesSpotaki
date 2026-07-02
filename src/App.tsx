@@ -130,19 +130,6 @@ export default function App() {
         onClose={() => setShowAboutModal(false)} 
       />
       
-      <div className="bg-linear-to-r from-indigo-600 via-indigo-500 to-indigo-700 dark:from-indigo-950 dark:to-slate-950 text-white px-4 py-2.5 text-sm flex items-center justify-between z-50 shadow-xl border-b border-white/10">
-        <div className="flex-1 text-center text-[11px] sm:text-sm font-bold tracking-wide">
-          <span className="opacity-90">You can power this applet with a <a href="https://developers.google.com/maps/demo-key?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-demo-key_api-key-link" target="_blank" rel="noopener noreferrer" className="underline font-black text-white hover:text-indigo-200 transition-colors">Maps Demo Key</a> with usage and API limits or get a <a href="https://developers.google.com/maps/get-started?utm_source=ai-studio&utm_medium=website&utm_campaign=FY26_Q1_maps-demo-key&utm_content=maps-standard-key_api-key-link" target="_blank" rel="noopener noreferrer" className="underline font-black text-white hover:text-indigo-200 transition-colors">standard API Key</a> for all GMP APIs.
-          </span>
-        </div>
-        <button 
-          onClick={() => setShowAboutModal(true)}
-          className="text-[10px] uppercase tracking-widest font-black bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-all active:scale-95 ml-4 whitespace-nowrap border border-white/10 flex items-center gap-2"
-        >
-          <Info className="w-3.5 h-3.5" />
-          About this applet
-        </button>
-      </div>
       <div className="flex-1 relative">
         {apiKey ? (
           <MapComponent 
@@ -181,4 +168,3 @@ export default function App() {
     </div>
   );
 }
-
